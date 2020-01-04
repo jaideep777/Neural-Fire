@@ -7,33 +7,33 @@ forcing_data_dir	output_nc
 
 # var |	  dir
 # ts			ncep_reanalysis/ts
-ts			Fire
-vp			Fire
-vpt1		Fire
+ts			.
+vp			.
+vpt1		.
 # cru_tmx		CRU_TS4.02
-rh			Fire
-wsp			Fire
+rh			.
+wsp			.
 # trmm		precip_trmm/combined/reordered_dims
-pr			Fire
-prl1		Fire
-prm1		Fire
-prm1s		Fire
+pr			.
+prl1		.
+prm1		.
+prm1s		.
 # ndr			ndr_daily
-gpp			Fire
-gppl1		Fire
-gppm1		Fire
-gppm1s		Fire
-# ffev		fire_events_modis/india/fire_modis_0.5
-# ba		fire_BA/fire_fire_calib
-gfed		Fire
-gfedl1		Fire
-gfedl04		Fire
-gfedl06		Fire
-cld			Fire
+gpp			.
+gppl1		.
+gppm1		.
+gppm1s		.
+# ffev		._events_modis/india/._modis_0.5
+# ba		._BA/._._calib
+gfed		.
+gfedl1		.
+gfedl04		.
+gfedl06		.
+cld			.
 # prev_cld	MODISAL2_cloud_fraction/nc_merged
-pop			Fire
-# ftmap		Fire
-ltn			Fire	
+pop			.
+# ftmap		.
+ltn			.	
 
 > FORCING_VARIABLE_DATA
 # name | unit 	|	prefix   		|	start_yr |	end_yr | nyrs/file | nlevs |    T mode			| Interpolation
@@ -80,23 +80,23 @@ ltn		 str/km2	ltn					2002		2015		14			1		linear			 none
 
 > STATIC_INPUT_FILES
 # var	|	nlevs | interp			| file 
-ftmap 		12 		coarsegrain		  forest_type/MODIS/ftmap_modis_global_0.25deg_12levs.nc
+ftmap 		12 		none			  ftmap.nc
 # elev		1		bilinear		  util_data/elevation/elev.0.5-deg.nc
-dft			1		nearest		  	  forest_type/MODIS/dft_MODIS_global_12lev_agri-bar_lt0.5_1deg.nc
+dft			1		none		  	  dft.nc
 # pop			1		coarsegrain		  World_population_density/GHS_POP_GPW42000_GLOBE_R2015A_54009_1k_v1_0/GHS_pop_GPW42000_reprojected_Globe.nc    
-rdtot	 	1 		coarsegrain		  Global_road_density/GRIP4_density_total/grip4_total_dens_m_km2.nc		
+rdtot	 	1 		none			  rdtot.nc		
 # rd_tp1	 	1 		coarsegrain		  Global_road_density/GRIP4_density_tp1/grip4_tp1_dens_m_km2.nc		
 # rd_tp2	 	1 		coarsegrain		  Global_road_density/GRIP4_density_tp2/grip4_tp2_dens_m_km2.nc		
 # rdtp3	 	1 		coarsegrain		  Global_road_density/GRIP4_density_tp3/grip4_tp3_dens_m_km2.nc		
 # rdtp4	 	1 		coarsegrain		  Global_road_density/GRIP4_density_tp4/grip4_tp4_dens_m_km2.nc		
 # rd_tp5	 	1 		coarsegrain		  Global_road_density/GRIP4_density_tp5/grip4_tp5_dens_m_km2.nc		
-region		1		nearest		  	  Fire_BA_GFED4.1s/ancil/basis_regions.nc
+region		1		none		  	  region.nc
 
 
 > MASKS
 # var	|	interp 			| file 
-ftmask		none 	  	  	  forest_type/MODIS/ftmask_MODIS_global_1deg.nc
-msk			bilinear 	 	  util_data/masks/surta_global_0.5_sl.nc
+ftmask		none 	  	  	ftmask.nc
+msk			none 	 	  	msk.nc
 
 
 > TIME

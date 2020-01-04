@@ -59,10 +59,10 @@ make
 #./nc2asc train params_newdata/params_ip_global.r
 #Rscript Rscripts/prepare_train_eval_datasets.R
 
-# Train NN
-cd tensorflow
-. runtf 
-cd ..
+## Train NN
+#cd tensorflow
+#. runtf 
+#cd ..
 
 # Run trained NN on data
 # # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>

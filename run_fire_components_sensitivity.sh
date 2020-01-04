@@ -71,8 +71,7 @@ make
 
 # Run trained NN on data
 # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
-#./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
-#mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
+./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
 
 # Plot results
 cd Rscripts
