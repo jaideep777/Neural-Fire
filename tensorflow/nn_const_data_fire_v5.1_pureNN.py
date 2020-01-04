@@ -1,12 +1,14 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 #from tensorflow.data import Dataset, Iterator
 import numpy as np
 #from numpy import genfromtxt
 import sys
 import argparse
 import pandas as pd
+
+tf.disable_v2_behavior()
 
 #string regions_names[] = {"BONA (Boreal North America)",				// 1
 #				          "TENA (Temperate North America)",				// 2
@@ -56,7 +58,7 @@ print("regions = ", r1, " ", r2)
 
 ID_ft = range(ID_ftmap1, ID_ftmap11) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
 
-X_ids = [ID_gppm1, ID_pr, ID_cld] + ID_ft
+X_ids = [ID_ltn, ID_gppl1, ID_pr, ID_cld, ID_vp,] + ID_ft
 
 Y_id = ID_gfedclass
 	

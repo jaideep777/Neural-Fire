@@ -3,7 +3,7 @@
 
 > FORCING_DATA_DIRS
 
-forcing_data_dir	/home/jaideep/h_drive/Data
+forcing_data_dir	output_nc
 
 # var |	  dir
 # ts			ncep_reanalysis/ts
@@ -120,6 +120,7 @@ dlon	1
 
 > OUTPUT_FILE
 outfile 	output_globe/train_data.txt
+ncoutdir	output_nc
 
 
 > END

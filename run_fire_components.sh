@@ -1,13 +1,13 @@
 #!/bin/bash
 
 VARS=( ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
-USEV=(   1    0       1   1   0    1   1    0      0         0 )
+USEV=(   0    1       1   0   1    1   1    0      0         0 )
 
 FOLDER=output_globe
-MODEL=CEAS
+MODEL=AUS
 
-R1=11
-R2=11
+R1=14
+R2=14
 
 ## Generate a unique code number for the model from the variables used.
 MODNUM="${USEV[@]}" 			# join USEV array serially (joins with spaces)
@@ -71,7 +71,7 @@ cd ..
 
 # Plot results
 cd Rscripts
-Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER
+Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER data_dir="/media/chethana/San/Data"
 
 #cd ..
 

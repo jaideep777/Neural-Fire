@@ -169,6 +169,7 @@ int MultiNcReader::read_params_file(){
 		if (s == "#") {getline(fin,s,'\n'); continue;}	// skip #followed lines (comments)
 		fin >> u;
 		if	(s == "outfile")	pointOutFile = u;
+		if	(s == "ncoutdir")	ncoutDir     = u;
 	}
 		
 	fin.close();
@@ -387,8 +388,22 @@ int MultiNcReader::init_vars(){
 				log_fout << vname << ", ";
 
 				// create input stream
-				string outfilename = data_dirs["forcing_data_dir"] + "/" + vname + "." + int2str(gt2year(ymd2gday(sim_date0))) + "-" + int2str(gt2year(ymd2gday(sim_datef))) + ".nc";
+				string outfilename = ncoutDir + "/" + vname + "." + int2str(gt2year(ymd2gday(sim_date0))) + "-" + int2str(gt2year(ymd2gday(sim_datef))) + ".nc";
 				model_variables[i]->createNcOutputStream(outfilename);
+			}
+			else if (static_var_files.find(vname) != static_var_files.end()){ 	// check if variable has a static file listed
+				log_fout << vname << ", "; log_fout.flush();
+
+				// oneshot read static variable
+				string outfilename = ncoutDir + "/" + vname + ".nc";
+				model_variables[i]->writeOneShot(outfilename);
+			}
+			else if (mask_var_files.find(vname) != mask_var_files.end()){ 	// check if variable has a static file listed
+				log_fout << vname << ", "; log_fout.flush();
+
+				// oneshot read static variable
+				string outfilename = ncoutDir + "/" + vname + ".nc";
+				model_variables[i]->writeOneShot(outfilename);
 			}
 			else{
 			} 
@@ -560,7 +575,7 @@ double MultiNcReader::nc_read_frame(int istep){
 			ts[0] = te[0] = var_year;
 			double tstart1 = ymd2gday(ts[0], ts[1], ts[2]) + (tstart-int(tstart));
 			double tend1   = ymd2gday(te[0], te[1], te[2]) + (tend-int(tend));
-			cout << vars[i].varname << " " << gt2string(tstart) << " --> " << gt2string(tstart1) << ", " << gt2string(tend) << " --> " << gt2string(tend) << "\n";
+			// cout << vars[i].varname << " " << gt2string(tstart) << " --> " << gt2string(tstart1) << ", " << gt2string(tend) << " --> " << gt2string(tend) << "\n";
 			vars[i].readVar_reduce_mean(tstart1, tend1);
 		}
 		else if (ip_data_map[vars[i].varname].mode == "prev_year"){ 

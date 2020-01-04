@@ -126,7 +126,7 @@ void write_eval(MultiNcReader &R, string vars_file){
 				else                       val = R.getVar(var)(ilon, ilat, 0);
 
 				// for Sensitivity analysis, increment desired variable
-				if      (var == "ts")      val += .01;
+				//if      (var == "ts")      val += .01;
 				
 				
 				// transform variables as per training data
