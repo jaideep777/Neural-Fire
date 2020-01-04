@@ -1,7 +1,5 @@
 #!/bin/bash
 
-DATA_DIR="/media/chethana/San/Data"
-
 #VARS=( ltn  gpp   gppm1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
 #USEV=(   0    0       1   1   1    0   1    0      0         0 )
 
