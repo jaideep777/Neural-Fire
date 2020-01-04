@@ -5,7 +5,7 @@ library(ncdf4)
 
 # These will be overridden by commandline arguments
 model_dir = "BOAS_mod744.8_ltn_gppm1_pr_ts_vp"
-fire_dir = "/home/jaideep/codes/neural-fire"
+fire_dir = "path/to/neural-fire"
 
 
 output_dir = "output_globe"
