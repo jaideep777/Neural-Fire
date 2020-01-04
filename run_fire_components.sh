@@ -1,18 +1,18 @@
 #!/bin/bash
 
 VARS=( ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
-USEV=(   1    0       1   1   0    1   1    0      0         0 )
+USEV=(   0    1       1   0   1    1   1    0      0         0 )
 
 FOLDER=output_globe
-MODEL=CEAS
+MODEL=AUS
 
-R1=11
-R2=11
+R1=14
+R2=14
 
 ## Generate a unique code number for the model from the variables used.
 MODNUM="${USEV[@]}" 			# join USEV array serially (joins with spaces)
 MODNUM=$((2#${MODNUM// /}))		# remove spaces so MODNUM becomes a binary number, then convert to decimal
-MODEL=${MODEL}_mod$MODNUM.8		# Append decimal number to model name. Thus each model gets unique name
+MODEL=${MODEL}_mod$MODNUM.5.1		# Append decimal number to model name. Thus each model gets unique name
 echo MODEL CODE=$MODEL
 
 ##################################################################
@@ -64,14 +64,14 @@ cd tensorflow
 . runtf 
 cd ..
 
-# Run trained NN on data
-# # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
-./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
-#mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
+## Run trained NN on data
+## # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
+#./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
+##mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
 
-# Plot results
-cd Rscripts
-Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER
+## Plot results
+#cd Rscripts
+#Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER 
 
 #cd ..
 
