@@ -1,10 +1,10 @@
 #!/bin/bash
 
-OUTDIR=output_globe
+OUTDIR=output_globe_sensitivity_3
 #MERGED_MOD='NHAF_mod84.5_pr_cld_pop'	# best
 #MERGED_MOD='NHAF_mod84.5_pr_cld_pop' 	# minimal
 MERGED_MOD='NHAF_mod116.5_pr_ts_cld_pop' 	# ts sensitivity
-MERGED_TP=merged_sens_3
+MERGED_TP=merged_sens_4
 
 ##best 
 #MODELS=('SHAF_mod176.5_gppl1_ts_cld'
@@ -31,7 +31,7 @@ MERGED_TP=merged_sens_3
 #'EUME_mod80.5_pr_cld' )
 
 # ts sensitivity
-MODELS=('AUS_mod440.5_gpp_gppl1_ts_cld_vp'
+MODELS=('AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp'
 'BOAS_mod232.5_gppm1_pr_ts_vp'
 'BONA_mod504.5_gpp_gppl1_pr_ts_cld_vp'
 'CEAS_mod248.5_gppl1_pr_ts_cld_vp'

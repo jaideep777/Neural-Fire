@@ -3,9 +3,9 @@ rm(list = ls())
 ## CREATE timeseries	
 library(ncdf4)
 
-fire_dir = "E:/All_Projects/codes/PureNN_fire"
-output_dir = "merged_models"
-model_dir = "merged_sens_2"
+fire_dir = "/home/jaideep/codes/PureNN_fire"
+output_dir = "output_globe"
+model_dir = "AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp"
 
 library(sf)
 
@@ -87,8 +87,26 @@ for (i in 0:12){
 
 ### NEW SENSITIVITY MAPS - 23/12/2019
 
-firenc_new = NcCreateOneShot("~/h_codes/PureNN_fire/merged_models/merged_sens_2/fire.ts_p1.2002-1-1-2015-12-31.nc", var_name = "fire")
-firenc_orig = NcCreateOneShot("~/h_codes/PureNN_fire/merged_models/merged_sens_2/fire.2002-1-1-2015-12-31.nc", var_name = "fire")
+rm(list = ls())
+
+## CREATE timeseries	
+library(ncdf4)
+
+fire_dir = "/home/jaideep/codes/PureNN_fire"
+output_dir = "merged_models"
+model_dir = "merged_sens_4"
+
+# fire_dir = "/home/jaideep/codes/PureNN_fire"
+# output_dir = "output_globe"
+# model_dir = "AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp"
+
+source("utils.R")
+
+# library(sf)
+# shp = st_read("D:/Water LUE Project/data/continent_shapefile/continent shapefile/continent.shp")
+
+firenc_new = NcCreateOneShot(paste0(fire_dir,"/",output_dir, "/", model_dir, "/fire.ts+.2002-1-1-2015-12-31.nc"), var_name = "fire")
+firenc_orig = NcCreateOneShot(paste0(fire_dir,"/",output_dir, "/", model_dir, "/fire.2002-1-1-2015-12-31.nc"), var_name = "fire")
 
 firenc_orig_yearly = firenc_orig
 firenc_orig_yearly$data = apply(firenc_orig_yearly$data, MARGIN = c(1,2), FUN = function(x){mean(x,na.rm=T)})*12
@@ -110,11 +128,19 @@ global_fire = sum(as.numeric(firenc_orig_yearly$data*cell_area), na.rm=T)*mha_pe
 global_fire_new = sum(as.numeric(firenc_new_yearly$data*cell_area), na.rm=T)*mha_per_m2 
 
 
-lim = 0.1 #max(abs(tseffect$data), na.rm=T)
+lim = 0.001 #max(abs(tseffect$data), na.rm=T)
 cols = createPalette(c("blue4", "skyblue", "cyan", "#f0f0f0", "yellow", "orange", "red"),c(-lim, -lim/2, -0.1*lim, 0, 0.1*lim, lim/2, lim)*1000, n = 1000) #gfed
 diff_fire_yearly = firenc_new_yearly
 diff_fire_yearly$data = firenc_new_yearly$data - firenc_orig_yearly$data
 plot.netcdf(dat = diff_fire_yearly, zlim = c(-lim,lim), col = cols, ilev = 1, itime = 4,preserve_layout = T)
+
+
+
+lim = 50 #max(abs(tseffect$data), na.rm=T)
+cols = createPalette(c("blue4", "skyblue", "cyan", "#f0f0f0", "yellow", "orange", "red"),c(-lim, -lim/2, -0.1*lim, 0, 0.1*lim, lim/2, lim)*1000, n = 1000) #gfed
+diff_fire_yearly = firenc_new_yearly
+diff_fire_yearly$data = as.integer(firenc_orig_yearly$data > 0.01)*(firenc_new_yearly$data - firenc_orig_yearly$data)/(firenc_orig_yearly$data)/.01*100
+plot.netcdf(dat = diff_fire_yearly, zlim = c(-lim,lim), col = cols, ilev = 1, itime = NA,preserve_layout = T)
 
 
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-VARS=( ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
-USEV=(   0    1       1   0   1    1   1    0      0         0 )
+VARS=( gppm1s ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
+USEV=(      1   0    1       1   0   1    1   1    0      0         0 )
 
 FOLDER=output_globe
 MODEL=AUS
