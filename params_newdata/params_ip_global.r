@@ -3,7 +3,7 @@
 
 > FORCING_DATA_DIRS
 
-forcing_data_dir	/media/chethana/San/Data
+forcing_data_dir	/media/jaideep/San/Data
 
 # var |	  dir
 # ts			ncep_reanalysis/ts

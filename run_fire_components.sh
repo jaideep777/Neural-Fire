@@ -9,10 +9,13 @@ MODEL=AUS
 R1=14
 R2=14
 
+
+FIRE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 ## Generate a unique code number for the model from the variables used.
 MODNUM="${USEV[@]}" 			# join USEV array serially (joins with spaces)
 MODNUM=$((2#${MODNUM// /}))		# remove spaces so MODNUM becomes a binary number, then convert to decimal
-MODEL=${MODEL}_mod$MODNUM.5.1		# Append decimal number to model name. Thus each model gets unique name
+MODEL=${MODEL}_mod$MODNUM.6.2		# Append decimal number to model name. Thus each model gets unique name
 echo MODEL CODE=$MODEL
 
 ##################################################################
@@ -35,13 +38,13 @@ echo MODEL = $MODEL
 XID=$(sed '$ s/.$//' <<< $XID)				# remove the trailing comma
 XID=${XID}"] + ID_ft" 						# Add closing bracket + ID_ft + ID_croplands
 
-XIDLINE=$(grep -rn "X\_ids \= " tensorflow/nn_const_data_fire_v5_pureNN.py | cut -f1 -d:)	# Get the line that defines X_ids in the tensorflow code file
+XIDLINE=$(grep -rn "X\_ids \= " tensorflow/nn_const_data_fire_v5.1_pureNN.py | cut -f1 -d:)	# Get the line that defines X_ids in the tensorflow code file
 
 echo "Replace Line $XIDLINE:" 
-echo -e "\033[0;31m- " $(grep -r "X\_ids \= " tensorflow/nn_const_data_fire_v5_pureNN.py)
+echo -e "\033[0;31m- " $(grep -r "X\_ids \= " tensorflow/nn_const_data_fire_v5.1_pureNN.py)
 echo -e "\033[0;32m+ " $XID "\033[0m"
 
-sed -i "${XIDLINE}s/.*/${XID}/" tensorflow/nn_const_data_fire_v5_pureNN.py	# Replace this line with the newly created X_ids 
+sed -i "${XIDLINE}s/.*/${XID}/" tensorflow/nn_const_data_fire_v5.1_pureNN.py	# Replace this line with the newly created X_ids 
 
 mkdir -p $FOLDER/$MODEL
 
@@ -64,15 +67,14 @@ cd tensorflow
 . runtf 
 cd ..
 
-## Run trained NN on data
-## # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
-#./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
-##mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
+# Run trained NN on data
+# # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
+./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
 
-## Plot results
-#cd Rscripts
-#Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER 
+# Plot results
+cd Rscripts
+Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER fire_dir=$FIRE_DIR
 
-#cd ..
+cd ..
 
 

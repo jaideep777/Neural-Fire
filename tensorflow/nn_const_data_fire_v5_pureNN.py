@@ -56,9 +56,9 @@ print("regions = ", r1, " ", r2)
 
 ID_ft = range(ID_ftmap1, ID_ftmap11) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
 
-X_ids = [ID_gppm1, ID_pr, ID_cld] + ID_ft
+X_ids = [ID_gpp, ID_gppl1, ID_ts, ID_cld, ID_vp,] + ID_ft
 
-Y_id = ID_gfedclass
+X_ids = [ID_gpp, ID_gppl1, ID_ts, ID_cld, ID_vp,] + ID_ft
 	
 # functions to initialize weights and biases
 def weight_variable(shape):

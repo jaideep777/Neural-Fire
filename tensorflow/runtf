@@ -15,16 +15,17 @@ else
 fi
 
 
-PATH_BAK=$PATH
-export PATH=$PATH:/home/chethana/anaconda2/bin
-eval "$(conda shell.bash hook)"
-conda activate tf
-python nn_const_data_fire_v5_pureNN.py -d $FOLDER -m $MODEL
+#PATH_BAK=$PATH
+#export PATH=$PATH:/home/chethana/anaconda2/bin
+#eval "$(conda shell.bash hook)"
+. ~/anaconda3/bin/activate
+conda activate tensorflow
+python nn_const_data_fire_v5.1_pureNN.py -d $FOLDER -m $MODEL
 conda deactivate
 sed -i -e "s/\\[/ /g" ../$FOLDER/$MODEL/weights_ba.txt
 sed -i -e "s/\\]/ /g" ../$FOLDER/$MODEL/weights_ba.txt
 sed -i -e "s/\\,/ /g" ../$FOLDER/$MODEL/weights_ba.txt
-PATH=$PATH_BAK
+#PATH=$PATH_BAK
 
 
 

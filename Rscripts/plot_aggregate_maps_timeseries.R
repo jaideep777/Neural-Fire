@@ -39,7 +39,7 @@ mha_per_m2 = 0.0001/1e6
 
 
 fire_obs_file = paste0(fire_dir, "/", data_dir,"/gfed.2002-2015.nc")  # Need absolute path here
-fire_pred_file = "fire.ts+.2002-1-1-2015-12-31.nc"
+fire_pred_file = "fire.2002-1-1-2015-12-31.nc"
 
 start_date  = "2002-1-1"
 end_date    = "2015-12-31"
