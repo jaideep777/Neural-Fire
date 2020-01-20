@@ -56,7 +56,7 @@ from variables import *	# Import variable IDs as in training data csv
 
 print("regions = ", r1, " ", r2)
 
-ID_ft = range(ID_ftmap1, ID_ftmap11) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
+ID_ft = list(range(ID_ftmap1, ID_ftmap11)) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
 
 X_ids = [ID_ltn, ID_gppl1, ID_pr, ID_cld, ID_vp,] + ID_ft
 
