@@ -17,7 +17,7 @@ add_label <- function(xfrac, yfrac, label, pos = 4, ...) {
 #   plot(1)
 #   add_label(0.00, 0.08, labels[i], cex=1.5, pos=4)
 # }
-
+  
 
 # Create a colour scale which takes the specied colors at the specified values
 createPalette <- function(cols, values, n=1000){

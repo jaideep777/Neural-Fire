@@ -1,18 +1,29 @@
 #!/bin/bash
 
-VARS=( ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
-USEV=(   1    0       1   1   0    1   1    0      0         0 )
+VARS=( gppm1s ltn  gpp   gppl1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
+USEV=(      0   0    1       1   0   1    1   1    0      0         0 )
 
 FOLDER=output_globe
-MODEL=CEAS
+MODEL=AUS
+MODEL_VERSION=9.20
 
-R1=11
-R2=11
+R1=14
+R2=14
+
+TENSORFLOW_FILE=nn_const_data_fire_v5.2_pureNN_dropout.py
+
+
+
+##################################################################
+##	Create unique model code based on variable, region, version  #
+##################################################################
+
+FIRE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## Generate a unique code number for the model from the variables used.
 MODNUM="${USEV[@]}" 			# join USEV array serially (joins with spaces)
 MODNUM=$((2#${MODNUM// /}))		# remove spaces so MODNUM becomes a binary number, then convert to decimal
-MODEL=${MODEL}_mod$MODNUM.8		# Append decimal number to model name. Thus each model gets unique name
+MODEL=${MODEL}_mod$MODNUM.$MODEL_VERSION		# Append decimal number to model name. Thus each model gets unique name
 echo MODEL CODE=$MODEL
 
 ##################################################################
@@ -35,13 +46,13 @@ echo MODEL = $MODEL
 XID=$(sed '$ s/.$//' <<< $XID)				# remove the trailing comma
 XID=${XID}"] + ID_ft" 						# Add closing bracket + ID_ft + ID_croplands
 
-XIDLINE=$(grep -rn "X\_ids \= " tensorflow/nn_const_data_fire_v5_pureNN.py | cut -f1 -d:)	# Get the line that defines X_ids in the tensorflow code file
+XIDLINE=$(grep -rn "X\_ids \= " tensorflow/$TENSORFLOW_FILE | cut -f1 -d:)	# Get the line that defines X_ids in the tensorflow code file
 
 echo "Replace Line $XIDLINE:" 
-echo -e "\033[0;31m- " $(grep -r "X\_ids \= " tensorflow/nn_const_data_fire_v5_pureNN.py)
+echo -e "\033[0;31m- " $(grep -r "X\_ids \= " tensorflow/$TENSORFLOW_FILE)
 echo -e "\033[0;32m+ " $XID "\033[0m"
 
-sed -i "${XIDLINE}s/.*/${XID}/" tensorflow/nn_const_data_fire_v5_pureNN.py	# Replace this line with the newly created X_ids 
+sed -i "${XIDLINE}s/.*/${XID}/" tensorflow/$TENSORFLOW_FILE	# Replace this line with the newly created X_ids 
 
 mkdir -p $FOLDER/$MODEL
 
@@ -56,8 +67,9 @@ make
 ##################################################################
 
 ## Aggregate training data
+# # nc2asc train syntax: ./nc2asc train <params_file> 
 #./nc2asc train params_newdata/params_ip_global.r
-#Rscript Rscripts/prepare_train_eval_datasets.R
+Rscript Rscripts/prepare_train_eval_datasets.R output_dir=$FOLDER fire_dir=$FIRE_DIR
 
 # Train NN
 cd tensorflow
@@ -67,12 +79,11 @@ cd ..
 # Run trained NN on data
 # # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
 ./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
-#mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
 
 # Plot results
 cd Rscripts
-Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER
+Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER fire_dir=$FIRE_DIR
 
-#cd ..
+cd ..
 
 

@@ -56,9 +56,9 @@ from variables import *	# Import variable IDs as in training data csv
 
 print("regions = ", r1, " ", r2)
 
-ID_ft = range(ID_ftmap1, ID_ftmap11) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
+ID_ft = list(range(ID_ftmap1, ID_ftmap11)) #+ [ID_ftmap12]	# this will exclude ftmap11 (cropland) and Barren (0)
 
-X_ids = [ID_ltn, ID_gppl1, ID_pr, ID_cld, ID_vp,] + ID_ft
+X_ids = [ID_gpp, ID_gppl1, ID_ts, ID_cld, ID_vp,] + ID_ft
 
 Y_id = ID_gfedclass
 	
@@ -72,27 +72,22 @@ def bias_variable(shape):
   return tf.Variable(initial)
 
 
-#def parse_csv(x):
-#  record_defaults = [[0], [0], [0], [0.0], [0.0], [0.0], [0.0], [0.0], [0.0], [0], [0.0], [0.0],[0],[0]]
-#  _,_, _, _,_, _, _,temp,_, _,fuel,S,_,fireclass = tf.decode_csv(x, record_defaults=record_defaults, field_delim="\t")
-#  return [temp,S,fuel], tf.one_hot(fireclass, depth=8, dtype=tf.float32)
-
-
-def create_dataset(filename, map_fun, batch_size, rep=1, buffer_size=0):
-  dat = tf.data.TextLineDataset(filename)
-  dat = dat.skip(1)
-  dat = dat.map(map_fun) 
-  dat = dat.repeat(rep)
-  if (buffer_size>0): 
-    dat = dat.shuffle(buffer_size)  # for each iteration, refills the buffer with new data and chooses random elements to put into batch <-- this behaviour is a bit counterintuitive
-  dat = dat.batch(batch_size)  
-  return dat  
+#def create_dataset(filename, map_fun, batch_size, rep=1, buffer_size=0):
+#  dat = tf.data.TextLineDataset(filename)
+#  dat = dat.skip(1)
+#  dat = dat.map(map_fun) 
+#  dat = dat.repeat(rep)
+#  if (buffer_size>0): 
+#    dat = dat.shuffle(buffer_size)  # for each iteration, refills the buffer with new data and chooses random elements to put into batch <-- this behaviour is a bit counterintuitive
+#  dat = dat.batch(batch_size)  
+#  return dat  
 
 
 
 # ~~~~~~ forward prop ~~~~~~~~~~
 def denseNet(x, W1,b1,Wo,bo):
   y1 = tf.nn.elu(tf.matmul(x,W1) + b1)  # first layer neurons with sigmoid activation
+  y1 = tf.nn.dropout(y1, 0.95)
 #  y2 = tf.nn.sigmoid(tf.matmul(y1,W2) + b2)  # first layer neurons with sigmoid activation
   y = tf.matmul(y1,Wo) + bo
   
@@ -169,7 +164,7 @@ print("--------------")
 	
 
 dat_train = tf.data.Dataset.from_tensor_slices((xin,yin))
-dat_train = dat_train.repeat(10000)
+dat_train = dat_train.repeat(100000)
 dat_train = dat_train.shuffle(1000000)
 dat_train = dat_train.batch(__batch_size)
 

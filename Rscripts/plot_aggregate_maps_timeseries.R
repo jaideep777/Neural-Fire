@@ -2,15 +2,15 @@
 library(ncdf4)
 #library(chron)
 
-fire_dir = "/home/jaideep/codes/PureNN_fire"
-output_dir = "output_globe"
+
+# These will be overridden by commandline arguments
 model_dir = "BOAS_mod744.8_ltn_gppm1_pr_ts_vp"
+fire_dir = "path/to/neural-fire"
 
-fire_obs_file = "/media/jaideep/San/Data/Fire_BA_GFED4.1s/nc/GFED_4.1s_1deg.1997-2016.nc"  # Need absolute path here
-fire_pred_file = "fire.ts+.2002-1-1-2015-12-31.nc"
 
-start_date  = "2002-1-1"
-end_date    = "2015-12-31"
+output_dir = "output_globe"
+data_dir   = "output_nc"
+
 
 # Get model_dir from command line 
 args = commandArgs(trailingOnly = T)
@@ -24,17 +24,26 @@ findOpt = function(o){
 
 if (findOpt("model_dir")) model_dir = spec[opt=="model_dir"]
 if (findOpt("output_dir")) output_dir = spec[opt=="output_dir"]
+if (findOpt("data_dir")) data_dir = spec[opt=="data_dir"]
+if (findOpt("fire_dir")) fire_dir = spec[opt=="fire_dir"]
 
 
+cat("fire_dir = ", fire_dir, "\n")
 cat("model_dir = ", model_dir, "\n")
 cat("output_dir = ", output_dir, "\n")
+cat("data_dir = ", data_dir, "\n")
 
-source(paste0(fire_dir, "/Rscripts/utils.R"))
-
-mha_per_m2 = 0.0001/1e6
-
+source("utils.R")
 
 mha_per_m2 = 0.0001/1e6
+
+
+fire_obs_file = paste0(fire_dir, "/", data_dir,"/gfed.2002-2015.nc")  # Need absolute path here
+fire_pred_file = "fire.2002-1-1-2015-12-31.nc"
+
+start_date  = "2002-1-1"
+end_date    = "2015-12-31"
+
 
 
 # for (mod in c("gfed_xcf")){ #}, "xdxl", "xlmois", "xts", "xpop", "xrh", "xwsp", "xrh_lmois")){
@@ -82,8 +91,8 @@ mha_per_m2 = 0.0001/1e6
       lon_res = mean(diff(fire_pred$lons))*111e3
       cell_area = t(matrix(ncol = length(fire_pred$lons), data = rep(lat_res*lon_res*cos(fire_pred$lats*pi/180), length(fire_pred$lons) ), byrow = F ))
       
-      fire_obs = NcCreateOneShot(filename = fire_obs_file, var_name = "ba", glimits = glimits)
-      fire_obs$time = as.Date("1997-1-15") + 365.2524/12*(0:239)
+      fire_obs = NcCreateOneShot(filename = fire_obs_file, var_name = "gfed", glimits = glimits)
+      #fire_obs$time = as.Date("1997-1-15") + 365.2524/12*(0:239)
       fire_obs = NcClipTime(fire_obs,  start_date, end_date)
       fire_obs$data[is.na(fire_pred$data)] = NA
       cell_area = t(matrix(ncol = length(fire_obs$lons), data = rep(lat_res*lon_res*cos(fire_obs$lats*pi/180), length(fire_obs$lons) ), byrow = F ))

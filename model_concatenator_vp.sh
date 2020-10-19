@@ -3,7 +3,7 @@
 OUTDIR=output_globe_sensitivity_3
 #MERGED_MOD='NHAF_mod84.5_pr_cld_pop'	# best
 #MERGED_MOD='NHAF_mod84.5_pr_cld_pop' 	# minimal
-MERGED_MOD='NHAF_mod116.5_pr_ts_cld_pop' 	# ts sensitivity
+MERGED_MOD='NHAF_mod14.5_vp_pop_rdtot' 	# ts sensitivity
 MERGED_TP=merged_sens_4
 
 ##best 
@@ -35,28 +35,28 @@ MODELS=('AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp'
 'BOAS_mod232.5_gppm1_pr_ts_vp'
 'BONA_mod504.5_gpp_gppl1_pr_ts_cld_vp'
 'CEAS_mod248.5_gppl1_pr_ts_cld_vp'
-'EQAS_mod112.5_pr_ts_cld'
-'EUME_mod48.5_ts_cld'
-'SA_mod502.5_gpp_gppm1s_pr_ts_cld_pop_rdtot'
+'EQAS_mod120.6_pr_ts_cld_vp'
+'EUME_mod88.6_pr_cld_vp'
+'SA_mod1406.6_gppm1s_gpp_pr_ts_cld_vp_pop_rdtot'
 'SEAS_mod510.5_gpp_gppm1_pr_ts_cld_vp_pop_rdtot'
-'SHAF_mod176.5_gppl1_ts_cld'
-'TCAM_mod496.5_gpp_gppl1_pr_ts_cld')
+'SHAF_mod184.6_gppl1_ts_cld_vp'
+'TCAM_mod504.5_gpp_gppl1_pr_ts_cld_vp')
 
 
-cp ${OUTDIR}/$MERGED_MOD/fire.ts+.200*.nc merged_models/${MERGED_TP}/tmp.nc
+cp ${OUTDIR}/$MERGED_MOD/fire.vp+1pc.200*.nc merged_models/${MERGED_TP}/tmp.nc
 for mod in "${MODELS[@]}"; do
 	echo $mod
-	cdo mergegrid merged_models/${MERGED_TP}/tmp.nc ${OUTDIR}/$mod/fire.ts+.200*.nc merged_models/${MERGED_TP}/tmp2.nc
+	cdo mergegrid merged_models/${MERGED_TP}/tmp.nc ${OUTDIR}/$mod/fire.vp+1pc.200*.nc merged_models/${MERGED_TP}/tmp2.nc
 	mv merged_models/${MERGED_TP}/tmp2.nc merged_models/${MERGED_TP}/tmp.nc
 done
-mv merged_models/${MERGED_TP}/tmp.nc merged_models/${MERGED_TP}/fire.ts+.2002-1-1-2015-12-31.nc
+mv merged_models/${MERGED_TP}/tmp.nc merged_models/${MERGED_TP}/fire.vp+1pc.2002-1-1-2015-12-31.nc
 
-cp ${OUTDIR}/$MERGED_MOD/fire.200*.nc merged_models/${MERGED_TP}/tmp.nc
-for mod in "${MODELS[@]}"; do
-	echo $mod
-	cdo mergegrid merged_models/${MERGED_TP}/tmp.nc ${OUTDIR}/$mod/fire.200*.nc merged_models/${MERGED_TP}/tmp2.nc
-	mv merged_models/${MERGED_TP}/tmp2.nc merged_models/${MERGED_TP}/tmp.nc
-done
-mv merged_models/${MERGED_TP}/tmp.nc merged_models/${MERGED_TP}/fire.2002-1-1-2015-12-31.nc
+#cp ${OUTDIR}/$MERGED_MOD/fire.200*.nc merged_models/${MERGED_TP}/tmp.nc
+#for mod in "${MODELS[@]}"; do
+#	echo $mod
+#	cdo mergegrid merged_models/${MERGED_TP}/tmp.nc ${OUTDIR}/$mod/fire.200*.nc merged_models/${MERGED_TP}/tmp2.nc
+#	mv merged_models/${MERGED_TP}/tmp2.nc merged_models/${MERGED_TP}/tmp.nc
+#done
+#mv merged_models/${MERGED_TP}/tmp.nc merged_models/${MERGED_TP}/fire.2002-1-1-2015-12-31.nc
 
 

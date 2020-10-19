@@ -92,7 +92,7 @@ void init_eval(MultiNcReader &R, string wts_file, string reg_file, string out_di
 	fire.setCoords(tvec, levs1, R.mglats, R.mglons);
 	fire.fill(fire.missing_value);
 
-	string fname = out_dir + "/fire.ts+."+R.sim_date0+"-"+R.sim_datef+".nc";
+	string fname = out_dir + "/fire."+R.sim_date0+"-"+R.sim_datef+".nc";
 	cout << "Creating output nc file: " << fname << endl;
 	fire.createNcOutputStream(fname);
 
@@ -125,8 +125,8 @@ void write_eval(MultiNcReader &R, string vars_file){
 				else if (var == "lat")     val = R.mglats[ilat];
 				else                       val = R.getVar(var)(ilon, ilat, 0);
 
-				// for Sensitivity analysis, increment desired variable
-				if      (var == "ts")      val += .01;
+//				// for Sensitivity analysis, increment desired variable
+//				if      (var == "vp")      val *= 1.01;
 				
 				
 				// transform variables as per training data
@@ -148,7 +148,7 @@ void write_eval(MultiNcReader &R, string vars_file){
 		
 			// If using v5 weights, ilev should start from 0
 			//          v6 onwards, ilev should start from 1
-			for (int ilev=0; ilev<R.getVar("ftmap").nlevs; ++ilev)	
+			for (int ilev=1; ilev<R.getVar("ftmap").nlevs; ++ilev)	
 				if (ilev !=11) x.push_back(R.getVar("ftmap")(ilon, ilat, ilev)); // exclude ftmap11 (croplands)
 
 

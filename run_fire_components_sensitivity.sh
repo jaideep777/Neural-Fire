@@ -3,11 +3,14 @@
 #VARS=( ltn  gpp   gppm1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
 #USEV=(   0    0       1   1   1    0   1    0      0         0 )
 
-FOLDER=output_globe
-MODEL=TCAM_mod496.5_gpp_gppl1_pr_ts_cld
+FOLDER=output_globe_sensitivity_3
+MODEL=AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp
 
 #R1=4
 #R2=5
+
+# Get fire_dir (directory where the fire code - and this script - resides)
+FIRE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## Generate a unique code number for the model from the variables used.
 #MODNUM="${USEV[@]}" 			# join USEV array serially (joins with spaces)
@@ -67,11 +70,10 @@ make
 # Run trained NN on data
 # nc2asc eval syntax: ./nc2asc eval <params_file> <model_dir> <weights_file> <vars_file> <regions file>
 ./nc2asc eval params_newdata/params_ip_global_eval.r $FOLDER/$MODEL weights_ba.txt nn_vars.txt regions.py
-#mv fire.2003-1-1-2015-12-31.nc $FOLDER/$MODEL
 
 # Plot results
 cd Rscripts
-Rscript plot_aggregate_maps_timeseries.R model_dir=$MODEL output_dir=$FOLDER
+Rscript plot_aggregate_maps_timeseries.R model_dir="$MODEL" output_dir="$FOLDER" fire_dir="${FIRE_DIR}"
 
 #cd ..
 
