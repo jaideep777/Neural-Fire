@@ -87,6 +87,7 @@ def bias_variable(shape):
 # ~~~~~~ forward prop ~~~~~~~~~~
 def denseNet(x, W1,b1,Wo,bo):
   y1 = tf.nn.elu(tf.matmul(x,W1) + b1)  # first layer neurons with sigmoid activation
+  y1 = tf.nn.dropout(y1, 0.95)
 #  y2 = tf.nn.sigmoid(tf.matmul(y1,W2) + b2)  # first layer neurons with sigmoid activation
   y = tf.matmul(y1,Wo) + bo
   
@@ -163,7 +164,7 @@ print("--------------")
 	
 
 dat_train = tf.data.Dataset.from_tensor_slices((xin,yin))
-dat_train = dat_train.repeat(10000)
+dat_train = dat_train.repeat(100000)
 dat_train = dat_train.shuffle(1000000)
 dat_train = dat_train.batch(__batch_size)
 

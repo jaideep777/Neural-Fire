@@ -24,7 +24,7 @@ cat("output_dir = ", output_dir, "\n")
 cat("data_dir = ", data_dir, "\n")
 
 
-source("utils.R")
+source(paste0(fire_dir, "/Rscripts/utils.R"))
 
 
 clamp = function(x, a,b){

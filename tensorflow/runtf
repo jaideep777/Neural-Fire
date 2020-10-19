@@ -14,13 +14,18 @@ else
 	MODEL=$2	# take from commandline if not set
 fi
 
+if [[ -v TENSORFLOW_FILE ]]; then
+	echo pulling TENSORFLOW_FILE from calling script: $TENSORFLOW_FILE
+else
+	TENSORFLOW_FILE=$3	# take from commandline if not set
+fi
 
 #PATH_BAK=$PATH
 #export PATH=$PATH:/home/chethana/anaconda2/bin
 #eval "$(conda shell.bash hook)"
 . ~/anaconda3/bin/activate
 conda activate tensorflow
-python nn_const_data_fire_v5.1_pureNN.py -d $FOLDER -m $MODEL
+python $TENSORFLOW_FILE -d $FOLDER -m $MODEL
 conda deactivate
 sed -i -e "s/\\[/ /g" ../$FOLDER/$MODEL/weights_ba.txt
 sed -i -e "s/\\]/ /g" ../$FOLDER/$MODEL/weights_ba.txt

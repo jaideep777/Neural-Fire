@@ -125,8 +125,8 @@ void write_eval(MultiNcReader &R, string vars_file){
 				else if (var == "lat")     val = R.mglats[ilat];
 				else                       val = R.getVar(var)(ilon, ilat, 0);
 
-				// for Sensitivity analysis, increment desired variable
-				//if      (var == "ts")      val += .01;
+//				// for Sensitivity analysis, increment desired variable
+//				if      (var == "vp")      val *= 1.01;
 				
 				
 				// transform variables as per training data

@@ -46,6 +46,7 @@ __n_steps = 2000
 n_classes = 25
 
 nn_h1 = 12
+nn_h2 = 8
 
 import sys
 sys.path.insert(0, '../'+output_dir)
@@ -85,10 +86,12 @@ def bias_variable(shape):
 
 
 # ~~~~~~ forward prop ~~~~~~~~~~
-def denseNet(x, W1,b1,Wo,bo):
-  y1 = tf.nn.elu(tf.matmul(x,W1) + b1)  # first layer neurons with sigmoid activation
-#  y2 = tf.nn.sigmoid(tf.matmul(y1,W2) + b2)  # first layer neurons with sigmoid activation
-  y = tf.matmul(y1,Wo) + bo
+def denseNet(x, W1,b1,W2,b2,Wo,bo):
+  y1 = tf.nn.elu(tf.matmul(x,W1) + b1)  # first layer neurons with elu activation
+  y1 = tf.nn.dropout(y1, 0.95)
+  y2 = tf.nn.elu(tf.matmul(y1,W2) + b2)  # second layer neurons with elu activation
+  y2 = tf.nn.dropout(y2, 0.95)  
+  y = tf.matmul(y2,Wo) + bo
   
   return y
 
@@ -192,16 +195,16 @@ y_ = tf.reshape(next_batch[1], shape=[-1,n_classes])
 W1 = weight_variable([n_inputs, nn_h1])	
 b1 = bias_variable([nn_h1])
 
-## Layer 2 : with a single neuron
-#W2 = weight_variable([3,5])	
-#b2 = bias_variable([5])
+# Layer 2 : with a single neuron
+W2 = weight_variable([nn_h1, nn_h2])	
+b2 = bias_variable([nn_h2])
 
 # output layer
-Wo = weight_variable([nn_h1, n_classes])	
+Wo = weight_variable([nn_h2, n_classes])	
 bo = bias_variable([n_classes])
 
 # forward prop
-y = denseNet(x, W1,b1,Wo,bo)
+y = denseNet(x, W1,b1,W2,b2,Wo,bo)
 
 ### TRAINING ###
 
@@ -210,7 +213,7 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_
 train_op = tf.train.AdamOptimizer(__learn_rate).minimize(cross_entropy)
 
 # calculate accuracy on the training sample
-y_soft = tf.nn.softmax(denseNet(x, W1,b1,Wo,bo))
+y_soft = tf.nn.softmax(denseNet(x, W1,b1,W2,b2,Wo,bo))
 correct_prediction = tf.equal(tf.argmax(y_soft,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -218,14 +221,14 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 # calculate accuracy on the validation dataset
 xv  = tf.reshape(xeval, shape=[-1, n_inputs])
 yv_ = tf.reshape(yeval, shape=[-1, n_classes])
-yv_soft = tf.nn.softmax(denseNet(xv, W1,b1,Wo,bo))
+yv_soft = tf.nn.softmax(denseNet(xv, W1,b1,W2,b2,Wo,bo))
 correct_prediction_v = tf.equal(tf.argmax(yv_soft,1), tf.argmax(yv_,1))
 accuracy_v = tf.reduce_mean(tf.cast(correct_prediction_v, tf.float32))
 
 # calculate accuracy on the test dataset
 xt  = tf.reshape(xtest, shape=[-1, n_inputs])
 yt_ = tf.reshape(ytest, shape=[-1, n_classes])
-yt_soft = tf.nn.softmax(denseNet(xt, W1,b1,Wo,bo))
+yt_soft = tf.nn.softmax(denseNet(xt, W1,b1,W2,b2,Wo,bo))
 correct_prediction_t = tf.equal(tf.argmax(yt_soft,1), tf.argmax(yt_,1))
 accuracy_t = tf.reduce_mean(tf.cast(correct_prediction_t, tf.float32))
 
@@ -268,9 +271,9 @@ with tf.Session() as sess:
   print("Average    ",0,": ",ce_avg/count, "\t", acc_avg/count, "\t", accv_avg/count, "\t", acct_avg/count)
 
   # final class probabilities for train, eval and test datasets
-  y_tr = sess.run(tf.nn.softmax(denseNet(tf.reshape(xin,   [-1,n_inputs]),W1,b1,Wo,bo)))
-  y_ev = sess.run(tf.nn.softmax(denseNet(tf.reshape(xeval, [-1,n_inputs]),W1,b1,Wo,bo)))
-  y_ts = sess.run(tf.nn.softmax(denseNet(tf.reshape(xtest, [-1,n_inputs]),W1,b1,Wo,bo)))
+  y_tr = sess.run(tf.nn.softmax(denseNet(tf.reshape(xin,   [-1,n_inputs]),W1,b1,W2,b2,Wo,bo)))
+  y_ev = sess.run(tf.nn.softmax(denseNet(tf.reshape(xeval, [-1,n_inputs]),W1,b1,W2,b2,Wo,bo)))
+  y_ts = sess.run(tf.nn.softmax(denseNet(tf.reshape(xtest, [-1,n_inputs]),W1,b1,W2,b2,Wo,bo)))
 
 
   np.savetxt("../"+output_dir+"/"+model_dir+"/y_predic_ba_train.txt",y_tr,delimiter=" ")
@@ -292,8 +295,8 @@ with tf.Session() as sess:
   f = open("../"+output_dir+"/"+model_dir+"/weights_ba.txt",'w')
   sys.stdout = f
 
-  print(1)
-  print([n_inputs,nn_h1,n_classes])
+  print(2)
+  print([n_inputs,nn_h1,nn_h2,n_classes])
   print("\n")
   
   print(Wi)	
@@ -304,6 +307,11 @@ with tf.Session() as sess:
   print(sess.run(W1))
   print("\n")
   print(sess.run(b1))
+  print("\n\n")
+
+  print(sess.run(W2))
+  print("\n")
+  print(sess.run(b2))
   print("\n\n")
 
   print(sess.run(Wo))

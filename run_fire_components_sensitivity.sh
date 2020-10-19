@@ -3,8 +3,8 @@
 #VARS=( ltn  gpp   gppm1  pr  ts  cld  vp  pop  rdtot   ftmap11 )
 #USEV=(   0    0       1   1   1    0   1    0      0         0 )
 
-FOLDER=output_globe
-MODEL=AUS_mod440.5_gpp_gppl1_ts_cld_vp
+FOLDER=output_globe_sensitivity_3
+MODEL=AUS_mod1464.6.2_gppm1s_gpp_gppl1_ts_cld_vp
 
 #R1=4
 #R2=5
